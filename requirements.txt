@@ -1,3 +1,4 @@
 beautifulsoup4==4.9.1
 nltk==3.5
+piano_transcription_inference
 youtube-dl

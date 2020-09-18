@@ -5,6 +5,8 @@ GiantMIDI-Piano [1] is a classical piano MIDI dataset include 10,848 MIDI files 
 Here is the demo of GiantMIDI-Piano: https://www.youtube.com/watch?v=5U-WL0QvKCg
 
 ## Install requirements
+Install PyTorch (>=1.4) following https://pytorch.org/.
+
 ```
 pip install -r requirements.txt
 ```
@@ -63,7 +65,7 @@ We provide a few MIDI files of GiantMIDI-Piano for preview at the [midis_preview
 ## FAQ
 If users met "Too many requests! Sleep for 3600 s" when downloading, it means that YouTube has limited the number of videos for downloading. Users could either 1) Wait until YouTube unblock your IP (1 days or a few weeks), or 2) try to use another machine with a different IP for downloading.
 
-If users still have difficulty when downloading or transcribing, please contact **Qiuqiang Kong** for support without hesitation.
+If users still have difficulty when downloading or transcribing, please contact Qiuqiang Kong for support without hesitation.
 
 ## Contact
 Qiuqiang Kong, kongqiuqiang@bytedance.com
