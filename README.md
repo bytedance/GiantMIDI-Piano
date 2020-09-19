@@ -57,7 +57,7 @@ midis (10,848 files)
 └── ...
 </pre>
 
-The transcription of all audio recordings may take around one week using a single GPU card.
+The transcription of all audio recordings may take around 10 days on a single GPU card.
 
 ## Previews of transcribed MIDI files
 We provide a few MIDI files of GiantMIDI-Piano for preview at the [midis_preview](midis_preview) directory.
