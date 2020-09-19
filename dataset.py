@@ -478,12 +478,12 @@ def download_youtube(args):
         if float(meta_dict['similarity'][n]) > 0.6:
             count += 1
             
-            bare_name = os.path.join(mp3s_dir, '{}, {}, {}, {}'.format(
+            bare_name = os.path.join('{}, {}, {}, {}'.format(
                 meta_dict['surname'][n], meta_dict['firstname'][n], 
                 meta_dict['music'][n], meta_dict['youtube_id'][n]).replace('/', '_'))
             
-            youtube_str = 'youtube-dl -f bestaudio -o "{}.%(ext)s" https://www.youtube.com/watch?v={} 1>"{}" 2>"{}"' \
-                .format(bare_name, meta_dict['youtube_id'][n], stdout_path, error_path)
+            youtube_str = 'youtube-dl -f bestaudio -o "{}/{}.%(ext)s" https://www.youtube.com/watch?v={} 1>"{}" 2>"{}"' \
+                .format(mp3s_dir, bare_name, meta_dict['youtube_id'][n], stdout_path, error_path)
             
             os.system(youtube_str)
             
@@ -500,7 +500,7 @@ def download_youtube(args):
             if len(audio_paths) > 0:
                 audio_path = audio_paths[0]
 
-                mp3_path = os.path.join(mp3s_dir, '{}.mp3'.format(get_filename(audio_path)))
+                mp3_path = os.path.join(mp3s_dir, '{}.mp3'.format(bare_name))
                 
                 os.system('ffmpeg -i "{}" -loglevel panic -y -ac 1 -ar 32000 "{}" '\
                     .format(audio_path, mp3_path))
@@ -554,12 +554,12 @@ def download_youtube_piano_solo(args):
         if float(meta_dict['piano_solo_prob'][n]) >= 0.5:
             count += 1
             
-            bare_name = os.path.join(mp3s_dir, '{}, {}, {}, {}'.format(
+            bare_name = os.path.join('{}, {}, {}, {}'.format(
                 meta_dict['surname'][n], meta_dict['firstname'][n], 
                 meta_dict['music'][n], meta_dict['youtube_id'][n]).replace('/', '_'))
             
-            youtube_str = 'youtube-dl -f bestaudio -o "{}.%(ext)s" https://www.youtube.com/watch?v={} 1>"{}" 2>"{}"' \
-                .format(bare_name, meta_dict['youtube_id'][n], stdout_path, error_path)
+            youtube_str = 'youtube-dl -f bestaudio -o "{}/{}.%(ext)s" https://www.youtube.com/watch?v={} 1>"{}" 2>"{}"' \
+                .format(mp3s_dir, bare_name, meta_dict['youtube_id'][n], stdout_path, error_path)
             
             os.system(youtube_str)
             
@@ -576,14 +576,14 @@ def download_youtube_piano_solo(args):
             if len(audio_paths) > 0:
                 audio_path = audio_paths[0]
 
-                mp3_path = os.path.join(mp3s_dir, '{}.mp3'.format(get_filename(audio_path)))
+                mp3_path = os.path.join(mp3s_dir, '{}.mp3'.format(bare_name))
                 
                 os.system('ffmpeg -i "{}" -loglevel panic -y -ac 1 -ar 32000 "{}" '\
                     .format(audio_path, mp3_path))
 
                 if os.path.splitext(audio_path)[-1] != '.mp3':
                     os.system('rm "{}"'.format(audio_path))
-            
+
         n += 1
             
     print('{} out of {} audios are downloaded!'.format(count, end_index - begin_index))
