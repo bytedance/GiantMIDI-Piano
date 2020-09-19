@@ -84,7 +84,7 @@ def transcribe_piano(args):
     begin_index = args.begin_index
     end_index = args.end_index
     mini_data = args.mini_data
-    device = 'cuda'
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     if mini_data:
         prefix = 'minidata_'
