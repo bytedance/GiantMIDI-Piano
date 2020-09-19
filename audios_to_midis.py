@@ -115,7 +115,7 @@ def transcribe_piano(args):
             print(n, mp3_path)
             midi_path = os.path.join(midis_dir, '{}.mid'.format(meta_dict['audio_name'][n]))
 
-            (audio, _) = librosa.core.load(mp3_path, 
+            (audio, _) = piano_transcription_inference.load_audio(mp3_path, 
                 sr=piano_transcription_inference.sample_rate, mono=True)
 
             try:
