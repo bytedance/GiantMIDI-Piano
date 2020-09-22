@@ -73,7 +73,7 @@ Qiuqiang Kong, kongqiuqiang@bytedance.com
 ## Cite
 [1] Qiuqiang Kong, Bochen Li, Jitong Chen, Yuxuan Wang, GiantMIDI-Piano: A MIDI dataset of classical piano music, 2020
 
-[2] Qiuqiang Kong, Bochen Li, Xuchen Song, Yuxuan Wang, High resolution piano transcription by regressing onset and offset times, 2020
+[2] Qiuqiang Kong, Bochen Li, Xuchen Song, Yuan Wan, Yuxuan Wang, High resolution piano transcription by regressing onset and offset times, 2020
 
 ## License
 Apache 2.0
