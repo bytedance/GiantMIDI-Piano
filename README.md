@@ -1,8 +1,14 @@
 # GiantMIDI-Piano
 
-GiantMIDI-Piano [1] is a classical piano MIDI dataset include 10,848 MIDI files of 2,784 composers. GiantMIDI-Piano are transcribed from live recordings with a high-resolution piano transcription system [2]. To acquire GiantMIDI-Piano, users need to: 1) Download audio recordings by themselves using our provided .csv file; 2) Transcribe audio recordings to MIDI files using our released piano transcription system. 
+GiantMIDI-Piano [1] is a classical piano MIDI dataset include 10,854 MIDI files of 2,786 composers. GiantMIDI-Piano are transcribed from live recordings with a high-resolution piano transcription system [2]. To acquire GiantMIDI-Piano, users need to: 1) Download audio recordings by themselves using our provided .csv file; 2) Transcribe audio recordings to MIDI files using our released piano transcription system. 
 
 Here is the demo of GiantMIDI-Piano: https://www.youtube.com/watch?v=5U-WL0QvKCg
+
+Transcribed MIDI files of GiantMIDI-Piano can be viewed at [midis_preview](midis_preview) directory.
+
+If users would like to preview all 10,854 MIDI files (185 Mb), please contact kongqiuqiang@bytedance.com.
+
+The following parts demonstrate how to download and transcribe all MIDI files by users.
 
 ## Install requirements
 Install PyTorch (>=1.4) following https://pytorch.org/.
@@ -12,7 +18,7 @@ pip install -r requirements.txt
 ```
 
 ## Download audio recordings
-Download audio recordings from YouTube using the following scripts. Approximately 10,848 audio recordings can be downloaded. There can be audios no longer downloadable.
+Download audio recordings from YouTube using the following scripts. Approximately 10,854 audio recordings can be downloaded. There can be audios no longer downloadable.
 
 ```
 WORKSPACE="./workspace"
@@ -30,7 +36,7 @@ python3 dataset.py download_youtube_piano_solo --workspace=$WORKSPACE --begin_in
 The downloaded mp3 files look like:
 
 <pre>
-mp3s_piano_solo (10,848 files)
+mp3s_piano_solo (10,854 files)
 ├── Aaron, Michael, Piano Course, V8WvKK-1b2c.mp3
 ├── Aarons, Alfred E., Brother Bill, Giet2Krl6Ww.mp3
 └── ...
@@ -51,16 +57,13 @@ python3 audios_to_midis.py transcribe_piano --workspace=$WORKSPACE --mp3s_dir=$W
 The transcribed MIDI files look like:
 
 <pre>
-midis (10,848 files)
+midis (10,854 files)
 ├── Aaron, Michael, Piano Course, V8WvKK-1b2c.mid
 ├── Abel, Frederic, Lola Polka, SLNJF0uiqRw.mid
 └── ...
 </pre>
 
 The transcription of all audio recordings may take around 10 days on a single GPU card.
-
-## Previews of transcribed MIDI files
-We provide a few MIDI files of GiantMIDI-Piano for preview at the [midis_preview](midis_preview) directory.
 
 ## FAQ
 If users met "Too many requests! Sleep for 3600 s" when downloading, it means that YouTube has limited the number of videos for downloading. Users could either 1) Wait until YouTube unblock your IP (1 days or a few weeks), or 2) try to use another machine with a different IP for downloading.
@@ -71,9 +74,9 @@ If users still have difficulty when downloading or transcribing, please contact 
 Qiuqiang Kong, kongqiuqiang@bytedance.com
 
 ## Cite
-[1] Qiuqiang Kong, Bochen Li, Jitong Chen, Yuxuan Wang, GiantMIDI-Piano: A MIDI dataset of classical piano music, 2020
+[1] Kong, Qiuqiang, Bochen Li, Jitong Chen, Yuxuan Wang, GiantMIDI-Piano: A MIDI dataset of classical piano music, 2020
 
-[2] Qiuqiang Kong, Bochen Li, Xuchen Song, Yuan Wan, Yuxuan Wang, High resolution piano transcription by regressing onset and offset times, 2020
+[2] Kong, Qiuqiang, Bochen Li, Xuchen Song, Yuan Wan, and Yuxuan Wang. "High-resolution Piano Transcription with Pedals by Regressing Onsets and Offsets Times." arXiv preprint arXiv:2010.01815 (2020).
 
 ## License
 Apache 2.0
