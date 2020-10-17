@@ -1,14 +1,14 @@
 # GiantMIDI-Piano
 
-GiantMIDI-Piano [1] is a classical piano MIDI dataset include 10,854 MIDI files of 2,786 composers. GiantMIDI-Piano are transcribed from live recordings with a high-resolution piano transcription system [2]. To acquire GiantMIDI-Piano, users need to: 1) Download audio recordings by themselves using our provided .csv file; 2) Transcribe audio recordings to MIDI files using our released piano transcription system. 
+GiantMIDI-Piano [1] is a classical piano MIDI dataset include 10,854 MIDI files of 2,786 composers. GiantMIDI-Piano are transcribed from live recordings with a high-resolution piano transcription system [2].
 
 Here is the demo of GiantMIDI-Piano: https://www.youtube.com/watch?v=5U-WL0QvKCg
 
 Transcribed MIDI files of GiantMIDI-Piano can be viewed at [midis_preview](midis_preview) directory.
 
-If users would like to preview all 10,854 MIDI files (185 Mb), please contact kongqiuqiang@bytedance.com.
+If users would like to access all 10,854 MIDI files (185 Mb), please contact kongqiuqiang@bytedance.com.
 
-The following parts demonstrate how to download and transcribe all MIDI files by users.
+Optionally, users could download and transcribe GiantMIDI-Piano by themselves as follows: 1) Download audio recordings using our provided .csv file in this repo; 2) Transcribe audio recordings into MIDI files using our released piano transcription system. 
 
 ## Install requirements
 Install PyTorch (>=1.4) following https://pytorch.org/.
@@ -74,9 +74,9 @@ If users still have difficulty when downloading or transcribing, please contact 
 Qiuqiang Kong, kongqiuqiang@bytedance.com
 
 ## Cite
-[1] Kong, Qiuqiang, Bochen Li, Jitong Chen, Yuxuan Wang, GiantMIDI-Piano: A MIDI dataset of classical piano music, 2020
+[1] Qiuqiang Kong, Bochen Li, Jitong Chen, and Yuxuan Wang. "GiantMIDI-Piano: A large-scale MIDI dataset for classical piano music." arXiv preprint arXiv:2010.07061 (2020). [[pdf]](https://arxiv.org/pdf/2010.07061.pdf)
 
-[2] Kong, Qiuqiang, Bochen Li, Xuchen Song, Yuan Wan, and Yuxuan Wang. "High-resolution Piano Transcription with Pedals by Regressing Onsets and Offsets Times." arXiv preprint arXiv:2010.01815 (2020).
+[2] Qiuqiang Kong, Bochen Li, Xuchen Song, Yuan Wan, and Yuxuan Wang. "High-resolution Piano Transcription with Pedals by Regressing Onsets and Offsets Times." arXiv preprint arXiv:2010.01815 (2020). [[pdf]](https://arxiv.org/pdf/2010.01815)
 
 ## License
 Apache 2.0
