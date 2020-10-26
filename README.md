@@ -6,9 +6,11 @@ Here is the demo of GiantMIDI-Piano: https://www.youtube.com/watch?v=5U-WL0QvKCg
 
 Transcribed MIDI files of GiantMIDI-Piano can be viewed at [midis_preview](midis_preview) directory.
 
-If users would like to access all 10,854 MIDI files (185 Mb), please contact kongqiuqiang@bytedance.com.
+## Download GiantMIDI-Piano
 
-Optionally, users could download and transcribe GiantMIDI-Piano by themselves as follows: 1) Download audio recordings using our provided .csv file in this repo; 2) Transcribe audio recordings into MIDI files using our released piano transcription system. 
+*Method 1*: Send an email to kongqiuqiang@bytedance.com for acquiring a disclaimer to get a link to download GiantMIDI-Piano (193 Mb).
+
+*Method 2*: Users can acquire GiantMIDI-Piano by downloading all audio recordings, and transcribing them into MIDI files following the rest part of this repo. The transcription takes ~200 hours on a single GPU card.
 
 ## Install requirements
 Install PyTorch (>=1.4) following https://pytorch.org/.
@@ -68,15 +70,13 @@ The transcription of all audio recordings may take around 10 days on a single GP
 ## FAQ
 If users met "Too many requests! Sleep for 3600 s" when downloading, it means that YouTube has limited the number of videos for downloading. Users could either 1) Wait until YouTube unblock your IP (1 days or a few weeks), or 2) try to use another machine with a different IP for downloading.
 
-If users still have difficulty when downloading or transcribing, please contact Qiuqiang Kong for support without hesitation.
-
 ## Contact
 Qiuqiang Kong, kongqiuqiang@bytedance.com
 
 ## Cite
-[1] Qiuqiang Kong, Bochen Li, Jitong Chen, and Yuxuan Wang. "GiantMIDI-Piano: A large-scale MIDI dataset for classical piano music." arXiv preprint arXiv:2010.07061 (2020). [[pdf]](https://arxiv.org/pdf/2010.07061.pdf)
+[1] Qiuqiang Kong, Bochen Li, Jitong Chen, and Yuxuan Wang. "GiantMIDI-Piano: A large-scale MIDI dataset for classical piano music." arXiv preprint arXiv:2010.07061 (2020). [https://arxiv.org/pdf/2010.07061](https://arxiv.org/pdf/2010.07061)
 
-[2] Qiuqiang Kong, Bochen Li, Xuchen Song, Yuan Wan, and Yuxuan Wang. "High-resolution Piano Transcription with Pedals by Regressing Onsets and Offsets Times." arXiv preprint arXiv:2010.01815 (2020). [[pdf]](https://arxiv.org/pdf/2010.01815)
+[2] Qiuqiang Kong, Bochen Li, Xuchen Song, Yuan Wan, and Yuxuan Wang. "High-resolution Piano Transcription with Pedals by Regressing Onsets and Offsets Times." arXiv preprint arXiv:2010.01815 (2020). [https://arxiv.org/pdf/2010.01815](https://arxiv.org/pdf/2010.01815)
 
 ## License
-Apache 2.0
+CC BY 4.0
