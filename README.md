@@ -8,11 +8,15 @@ Transcribed MIDI files of GiantMIDI-Piano can be viewed at [midis_preview](midis
 
 ## Download GiantMIDI-Piano
 
-*Method 1* (suggested): Follow [disclaimer.md](disclaimer.md) to agree a disclaimer and download a stable version of GiantMIDI-Piano (193 MB).
+## Method 1 (suggested)
 
-*Method 2*: Users can acquire GiantMIDI-Piano by downloading all audio recordings, and transcribing them into MIDI files following the rest part of this repo. The transcription takes ~200 hours on a single GPU card.
+Follow [disclaimer.md](disclaimer.md) to agree a disclaimer and download a stable version of GiantMIDI-Piano (193 MB).
 
-## Install requirements
+## Method 2
+
+Users can acquire GiantMIDI-Piano by downloading all audio recordings, and transcribing them into MIDI files following the rest part of this repo. The transcription takes ~200 hours on a single GPU card.
+
+### Install requirements
 Install PyTorch (>=1.4) following https://pytorch.org/.
 
 The above links also include a curated subset. The curated subset constrain YouTube titles must contain composer surnames.
@@ -21,7 +25,7 @@ The above links also include a curated subset. The curated subset constrain YouT
 pip install -r requirements.txt
 ```
 
-## Download audio recordings
+### Download audio recordings
 Download audio recordings from YouTube using the following scripts. Approximately 10,854 audio recordings can be downloaded. There can be audios no longer downloadable.
 
 ```
@@ -46,8 +50,7 @@ mp3s_piano_solo (10,854 files)
 └── ...
 </pre>
 
-## Transcribe
-Trainscribe audio recordings to MIDI files.
+### Transcribe audios to MIDI files
 
 ```
 # Transcribe all mp3s to midi files. Users could split the transcription into parts to speed up the transcription. E.g.,
@@ -69,6 +72,16 @@ midis (10,854 files)
 
 The transcription of all audio recordings may take around 10 days on a single GPU card.
 
+Details of scripts can be viewed at [scripts](scripts)
+
+## Analyses the statistics of GiantMIDI-Piano
+
+All statistics and figures in [1] can be reproduced by:
+
+```bash
+./scripts/3_statistics.sh
+```
+
 ## FAQ
 If users met "Too many requests! Sleep for 3600 s" when downloading, it means that YouTube has limited the number of videos for downloading. Users could either 1) Wait until YouTube unblock your IP (1 days or a few weeks), or 2) try to use another machine with a different IP for downloading.
 
@@ -77,8 +90,6 @@ Qiuqiang Kong, qiuqiangkong@gmail.com
 
 ## Cite
 [1] Qiuqiang Kong, Bochen Li, Jitong Chen, and Yuxuan Wang. "GiantMIDI-Piano: A large-scale MIDI dataset for classical piano music." arXiv preprint arXiv:2010.07061 (2020). [https://arxiv.org/pdf/2010.07061](https://arxiv.org/pdf/2010.07061)
-
-[2] Qiuqiang Kong, Bochen Li, Xuchen Song, Yuan Wan, and Yuxuan Wang. "High-resolution Piano Transcription with Pedals by Regressing Onsets and Offsets Times." arXiv preprint arXiv:2010.01815 (2020). [https://arxiv.org/pdf/2010.01815](https://arxiv.org/pdf/2010.01815)
 
 ## License
 CC BY 4.0
