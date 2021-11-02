@@ -65,9 +65,12 @@ def calculate_piano_solo_prob(args):
             meta_dict['piano_solo_prob'].append(prob)
             meta_dict['audio_duration'].append(len(audio) / sample_rate)
         else:
-            meta_dict['piano_solo_prob'].append(0.)
+            meta_dict['piano_solo_prob'].append('')
             meta_dict['audio_name'].append('')
-            meta_dict['audio_duration'].append(0.)
+            meta_dict['audio_duration'].append('')
+
+        if n > 50:
+            break
 
     write_meta_dict_to_csv(meta_dict, piano_prediction_path)
     print('Write out to {}'.format(piano_prediction_path))
