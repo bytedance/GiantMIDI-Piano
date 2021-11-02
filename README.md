@@ -1,6 +1,6 @@
 # GiantMIDI-Piano
 
-GiantMIDI-Piano [1] is a classical piano MIDI dataset include 10,854 MIDI files of 2,786 composers. GiantMIDI-Piano are transcribed from live recordings with a high-resolution piano transcription system [2].
+GiantMIDI-Piano [1] is a classical piano MIDI dataset contains 10,854 MIDI files of 2,786 composers. The curated subset by constraining composer surnames contains 7,236 MIDI files of 1,787 composers. GiantMIDI-Piano are transcribed from live recordings with a high-resolution piano transcription system [2].
 
 Here is the demo of GiantMIDI-Piano: https://www.youtube.com/watch?v=5U-WL0QvKCg
 
@@ -8,12 +8,14 @@ Transcribed MIDI files of GiantMIDI-Piano can be viewed at [midis_preview](midis
 
 ## Download GiantMIDI-Piano
 
-*Method 1*: Send an email to kongqiuqiang@bytedance.com for acquiring a disclaimer to get a link to download GiantMIDI-Piano (193 Mb).
+*Method 1* (suggested): Follow [disclaimer.md](disclaimer.md) to agree a disclaimer and download a stable version of GiantMIDI-Piano (193 MB).
 
 *Method 2*: Users can acquire GiantMIDI-Piano by downloading all audio recordings, and transcribing them into MIDI files following the rest part of this repo. The transcription takes ~200 hours on a single GPU card.
 
 ## Install requirements
 Install PyTorch (>=1.4) following https://pytorch.org/.
+
+The above links also include a curated subset. The curated subset constrain YouTube titles must contain composer surnames.
 
 ```
 pip install -r requirements.txt
@@ -71,7 +73,7 @@ The transcription of all audio recordings may take around 10 days on a single GP
 If users met "Too many requests! Sleep for 3600 s" when downloading, it means that YouTube has limited the number of videos for downloading. Users could either 1) Wait until YouTube unblock your IP (1 days or a few weeks), or 2) try to use another machine with a different IP for downloading.
 
 ## Contact
-Qiuqiang Kong, kongqiuqiang@bytedance.com
+Qiuqiang Kong, qiuqiangkong@gmail.com
 
 ## Cite
 [1] Qiuqiang Kong, Bochen Li, Jitong Chen, and Yuxuan Wang. "GiantMIDI-Piano: A large-scale MIDI dataset for classical piano music." arXiv preprint arXiv:2010.07061 (2020). [https://arxiv.org/pdf/2010.07061](https://arxiv.org/pdf/2010.07061)
