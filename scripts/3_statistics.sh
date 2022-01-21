@@ -2,13 +2,13 @@
 WORKSPACE="./workspace"
 
 ###### Plot figures for paper ######
-# Calculate the number of piano pieces, nationalites, etc.
+# Calculate the number of solo piano works, nationalites, etc.
 python3 calculate_statistics.py meta_info --workspace=$WORKSPACE --surname_in_youtube_title
 
-# Plot number of works of composers.
+# Plot the number of works of composers.
 python3 calculate_statistics.py plot_composer_works_num --workspace=$WORKSPACE --surname_in_youtube_title
 
-# Plot total piece durations of composers.
+# Plot the complete works durations of composers.
 python3 calculate_statistics.py plot_composer_durations --workspace=$WORKSPACE --surname_in_youtube_title
 
 # Plot nationalities.

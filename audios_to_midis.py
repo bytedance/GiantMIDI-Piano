@@ -69,9 +69,6 @@ def calculate_piano_solo_prob(args):
             meta_dict['audio_name'].append('')
             meta_dict['audio_duration'].append('')
 
-        if n > 50:
-            break
-
     write_meta_dict_to_csv(meta_dict, piano_prediction_path)
     print('Write out to {}'.format(piano_prediction_path))
     
@@ -95,8 +92,7 @@ def transcribe_piano(args):
         prefix = ''
 
     # Paths
-    csv_path = os.path.join(workspace, 
-        '{}full_music_pieces_youtube_similarity_pianosoloprob.csv'.format(prefix))
+    csv_path = os.path.join('./resources/full_music_pieces_youtube_similarity_pianosoloprob_split.csv')
 
     os.makedirs(midis_dir, exist_ok=True)
 
@@ -111,7 +107,8 @@ def transcribe_piano(args):
     audios_num = len(meta_dict['surname'])
 
     for n in range(begin_index, min(end_index, audios_num)):
-        if float(meta_dict['piano_solo_prob'][n]) >= 0.5:
+        
+        if meta_dict['giant_midi_piano'][n] and int(meta_dict['giant_midi_piano'][n]) == 1:
             count += 1
             
             mp3_path = os.path.join(mp3s_dir, '{}.mp3'.format(meta_dict['audio_name'][n]))

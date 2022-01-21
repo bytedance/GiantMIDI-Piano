@@ -1,6 +1,6 @@
 # GiantMIDI-Piano
 
-GiantMIDI-Piano [1] is a classical piano MIDI dataset contains 10,854 MIDI files of 2,786 composers. The curated subset by constraining composer surnames contains 7,236 MIDI files of 1,787 composers. GiantMIDI-Piano are transcribed from live recordings with a high-resolution piano transcription system [2].
+GiantMIDI-Piano [1] is a classical piano MIDI dataset contains 10,855 MIDI files of 2,786 composers. The curated subset by constraining composer surnames contains 7,236 MIDI files of 1,787 composers. GiantMIDI-Piano are transcribed from live recordings with a high-resolution piano transcription system [2].
 
 Here is the demo of GiantMIDI-Piano: https://www.youtube.com/watch?v=5U-WL0QvKCg
 
@@ -19,14 +19,14 @@ Users can acquire GiantMIDI-Piano by downloading all audio recordings, and trans
 ### Install requirements
 Install PyTorch (>=1.4) following https://pytorch.org/.
 
-The above links also include a curated subset. The curated subset constrain YouTube titles must contain composer surnames.
+The above links also include a curated subset. The curated subset constrains the YouTube titles should contain composers surnames.
 
 ```
 pip install -r requirements.txt
 ```
 
 ### Download audio recordings
-Download audio recordings from YouTube using the following scripts. Approximately 10,854 audio recordings can be downloaded. There can be audios no longer downloadable.
+Download audio recordings from YouTube using the following scripts. Approximately 10,855 audio recordings can be downloaded. There can be audios no longer downloadable.
 
 ```
 WORKSPACE="./workspace"
@@ -44,7 +44,7 @@ python3 dataset.py download_youtube_piano_solo --workspace=$WORKSPACE --begin_in
 The downloaded mp3 files look like:
 
 <pre>
-mp3s_piano_solo (10,854 files)
+mp3s_piano_solo (10,855 files)
 ├── Aaron, Michael, Piano Course, V8WvKK-1b2c.mp3
 ├── Aarons, Alfred E., Brother Bill, Giet2Krl6Ww.mp3
 └── ...
@@ -64,7 +64,7 @@ python3 audios_to_midis.py transcribe_piano --workspace=$WORKSPACE --mp3s_dir=$W
 The transcribed MIDI files look like:
 
 <pre>
-midis (10,854 files)
+midis (10,855 files)
 ├── Aaron, Michael, Piano Course, V8WvKK-1b2c.mid
 ├── Abel, Frederic, Lola Polka, SLNJF0uiqRw.mid
 └── ...

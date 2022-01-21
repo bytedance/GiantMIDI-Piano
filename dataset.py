@@ -413,6 +413,7 @@ def calculate_similarity(args):
     # Meta info to be downloaded
     meta_dict = read_csv_to_meta_dict(youtube_csv_path)
     meta_dict['similarity'] = []
+    meta_dict['surname_in_youtube_title'] = []
 
     tokenizer = RegexpTokenizer('[A-Za-z0-9ÇéâêîôûàèùäëïöüÄß]+')
 
@@ -432,7 +433,17 @@ def calculate_similarity(args):
         searched_words = tokenizer.tokenize(searched_str.lower())
 
         similarity = jaccard_similarity(target_words, searched_words)
-        meta_dict['similarity'].append(str(similarity)) 
+        meta_dict['similarity'].append(str(similarity))
+
+        if meta_dict['surname'][n] in meta_dict['youtube_title'][n]:
+            meta_dict['surname_in_youtube_title'].append(1)
+        else:
+            meta_dict['surname_in_youtube_title'].append(0)
+
+        if meta_dict['surname'][n] in meta_dict['youtube_title'][n]:
+            meta_dict['surname_in_youtube_title'].append(1)
+        else:
+            meta_dict['surname_in_youtube_title'].append(0)
 
     write_meta_dict_to_csv(meta_dict, similarity_csv_path)
     print('Write out to {}'.format(similarity_csv_path))

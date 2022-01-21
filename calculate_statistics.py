@@ -20,10 +20,18 @@ note_names = [r'$\mathregular{A_{0}}$', r'$\mathregular{A{\sharp}_{0}}$', r'$\ma
         r'$\bf{C_{7}}$', r'$\mathregular{C{\sharp}_{7}}$', r'$\mathregular{D_{7}}$', r'$\mathregular{D{\sharp}_{7}}$', r'$\mathregular{E_{7}}$', r'$\mathregular{F_{7}}$', r'$\mathregular{F{\sharp}_{7}}$', r'$\mathregular{G_{7}}$', r'$\mathregular{G{\sharp}_{7}}$', r'$\mathregular{A_{7}}$', r'$\mathregular{A{\sharp}_{7}}$', r'$\mathregular{B_{7}}$', 
         r'$\bf{C_{8}}$']
 
-chroma_names = [r'$\bf{C}$', r'$\mathregular{C{\sharp}}$', r'$\mathregular{D}$', r'$\mathregular{D{\sharp}}$', r'$\mathregular{E}$', r'$\mathregular{F}$', r'$\mathregular{F{\sharp}}$', r'$\mathregular{G}$', r'$\mathregular{G{\sharp}}$', r'$\mathregular{A}$', r'$\mathregular{A{\sharp}}$', r'$\mathregular{B}$']
+white_notes = np.array([0, 2] + [3 + e + i * 12 for e in [0, 2, 4, 5, 7, 9, 11] for i in range(7)] + [87])
+black_notes = np.array([1] + [3 + e + i * 12 for e in [1, 3, 6, 8, 10] for i in range(7)])
+C_notes = [3, 15, 27, 39, 51, 63, 75, 87]
+
+chroma_names = [r'$\bf{C}$', r'$\mathregular{C{\sharp}}$', r'$\mathregular{D}$', 
+    r'$\mathregular{D{\sharp}}$', r'$\mathregular{E}$', r'$\mathregular{F}$', 
+    r'$\mathregular{F{\sharp}}$', r'$\mathregular{G}$', r'$\mathregular{G{\sharp}}$', 
+    r'$\mathregular{A}$', r'$\mathregular{A{\sharp}}$', r'$\mathregular{B}$']
 
 six_composers = ['Bach, Johann Sebastian', 'Mozart, Wolfgang Amadeus', 
-        'Beethoven, Ludwig van', 'Chopin, Frédéric', 'Liszt, Franz', 'Debussy, Claude']
+        'Beethoven, Ludwig van', 'Chopin, Frédéric', 'Liszt, Franz', 
+        'Debussy, Claude']
 
 frames_per_second = 100
 begin_note = 21
@@ -55,37 +63,36 @@ def meta_info(args):
 
     audios_num = len(meta_dict['audio_name'])
 
-    indexes = []
+    solo_piano_works_indexes = []
 
     for n in range(audios_num):
+
         if meta_dict['audio_name'][n] != "" and int(meta_dict['giant_midi_piano'][n]):
             if surname_in_youtube_title:
                 if int(meta_dict['surname_in_youtube_title'][n]) == 1:
-                    indexes.append(n)
+                    solo_piano_works_indexes.append(n)
             else:
-                indexes.append(n)
+                solo_piano_works_indexes.append(n)
 
-    print('Music pieces num: {}'.format(len(indexes)))
+    print('Music pieces num: {}'.format(len(solo_piano_works_indexes)))
 
-    # Dump durations of composers
-    full_names = []
+    solo_piano_composer_names = []
 
-    for idx in indexes:
-        full_names.append('{}, {}'.format(meta_dict['surname'][idx], meta_dict['firstname'][idx]))
+    for index in solo_piano_works_indexes:
+        solo_piano_composer_names.append(
+            '{}, {}'.format(meta_dict['surname'][index], meta_dict['firstname'][index]))
 
-    composers = np.array(list(set(full_names)))
-    print('Composers num: {}'.format(len(composers)))
+    unique_solo_piano_composer_names = np.array(list(set(solo_piano_composer_names)))
+    print('Composers num: {}'.format(len(unique_solo_piano_composer_names)))
 
-    ###
-    # Number of works
-    durations_dict = {composer: 0 for composer in composers}
+    # Durations of solo piano works.
+    durations_dict = {composer: 0 for composer in unique_solo_piano_composer_names}
     
-    for idx in indexes:
-        composer = '{}, {}'.format(meta_dict['surname'][idx], meta_dict['firstname'][idx])
-        durations_dict[composer] += float(meta_dict['audio_duration'][idx])
+    for index in solo_piano_works_indexes:
+        composer = '{}, {}'.format(meta_dict['surname'][index], meta_dict['firstname'][index])
+        durations_dict[composer] += float(meta_dict['audio_duration'][index])
 
     return durations_dict
-    # pickle.dump(durations_dict, open(statistics_path, 'wb'))
 
 
 def plot_composer_works_num(args):
@@ -103,15 +110,15 @@ def plot_composer_works_num(args):
         """Get the number of works of composers.
 
         Args:
-          meta_dict, dict, keys: ['surname', 'firstname', 'music', 'nationality', 
-              'birth', 'death', 'youtube_title', 'youtube_id', 'similarity', 
-              'piano_solo_prob', 'audio_name']
-          indexes: 1darray, e.g., [0, 2, 5, 6, ...]
-          composers: List[str]
+            meta_dict, dict, keys: ['surname', 'firstname', 'music', 'nationality', 
+                'birth', 'death', 'youtube_title', 'youtube_id', 'similarity', 
+                'piano_solo_prob', 'audio_name']
+            indexes: 1darray, e.g., [0, 2, 5, 6, ...]
+            composers: List[str]
 
         Returns:
-          number_of_works: (composers_num,)
-          sorted_indexes: (composers_num,)
+            number_of_works: (composers_num,)
+            sorted_indexes: (composers_num,)
         """
         # Composers
         full_names = []
@@ -127,7 +134,7 @@ def plot_composer_works_num(args):
         number_of_works = np.array([works_dict[composer] for composer in composers])
 
         # Sort by number of works
-        sorted_indexes = np.argsort(number_of_works, kind='mergesort')[::-1]
+        sorted_indexes = np.argsort(number_of_works, kind='stable')[::-1]
 
         return number_of_works, sorted_indexes
 
@@ -146,8 +153,8 @@ def plot_composer_works_num(args):
     for key in meta_dict.keys():
         meta_dict[key] = np.array(meta_dict[key])
 
-    all_indexes = []
-    piano_indexes = []
+    complete_works_indexes = []
+    solo_piano_works_indexes = []
 
     for n in range(len(meta_dict['youtube_title'])):
 
@@ -160,28 +167,26 @@ def plot_composer_works_num(args):
                 flag = True
 
         if flag:
-            all_indexes.append(n)
+            complete_works_indexes.append(n)
 
             if int(meta_dict['giant_midi_piano'][n]) == 1:
-                piano_indexes.append(n)
+                solo_piano_works_indexes.append(n)
 
-    # Get composer names.
-    piano_composers = []
+    # Get solo piano composer names.
+    solo_piano_composer_names = []
 
-    for idx in piano_indexes:
-        piano_composers.append('{}, {}'.format(meta_dict['surname'][idx], meta_dict['firstname'][idx]))
+    for idx in solo_piano_works_indexes:
+        solo_piano_composer_names.append(
+            '{}, {}'.format(meta_dict['surname'][idx], meta_dict['firstname'][idx]))
 
-    piano_composers = list(set(piano_composers))
+    unique_solo_piano_composer_names = sorted(list(set(solo_piano_composer_names)))
 
     # Get composer works number.
-    composer_works_num_full, _ = _get_composer_works_num(
-        meta_dict, all_indexes, piano_composers)
+    composer_complete_works_nums, _ = _get_composer_works_num(
+        meta_dict, complete_works_indexes, unique_solo_piano_composer_names)
 
-    composer_works_num_piano, sorted_indexes = _get_composer_works_num(
-        meta_dict, piano_indexes, piano_composers)
-
-    # composer_works_num_piano, sorted_indexes2 = _get_composer_works_num(meta_dict, piano_indexes, piano_composers)
-    print(np.abs(np.sum(sorted_indexes[1:] - sorted_indexes[0:-1])))
+    composer_solo_piano_works_nums, sorted_indexes = _get_composer_works_num(
+        meta_dict, solo_piano_works_indexes, unique_solo_piano_composer_names)
 
     # Plot
     top_composers = 100
@@ -190,19 +195,20 @@ def plot_composer_works_num(args):
     ax.set_ylim(0, 200)
     ax.set_ylabel('Number of works', fontsize=15)
 
-    sorted_full_works = np.array(composer_works_num_full)[sorted_indexes[0 : top_composers]]
-    sorted_piano_works = np.array(composer_works_num_piano)[sorted_indexes[0 : top_composers]]
-    sorted_piano_composers = np.array(piano_composers)[sorted_indexes[0 : top_composers]]
+    sorted_complete_works = np.array(composer_complete_works_nums)[sorted_indexes[0 : top_composers]]
+    sorted_solo_piano_works = np.array(composer_solo_piano_works_nums)[sorted_indexes[0 : top_composers]]
+    sorted_piano_composers = np.array(unique_solo_piano_composer_names)[sorted_indexes[0 : top_composers]]
 
-    line1 = ax.bar(np.arange(top_composers), sorted_full_works, 
-        align='center', color='pink', alpha=0.5, label='Full works')
-    line2 = ax.bar(np.arange(top_composers), sorted_piano_works, 
-        align='center', color='C0', alpha=1, label='Piano works')
+    line1 = ax.bar(np.arange(top_composers), sorted_complete_works, 
+        align='center', color='pink', alpha=0.5, label='Complete works')
 
-    for i, v in enumerate(sorted_piano_works):
+    line2 = ax.bar(np.arange(top_composers), sorted_solo_piano_works, 
+        align='center', color='C0', alpha=1, label='Solo piano works')
+
+    for i, v in enumerate(sorted_solo_piano_works):
         ax.text(i - 0.3, max(v - len(str(v) * 7), 3), str(v), color='yellow', fontweight='bold', rotation=90)
 
-    for i, v in enumerate(sorted_full_works):
+    for i, v in enumerate(sorted_complete_works):
         ax.text(i - 0.3, min(200, v) + 5, str(v), color='red', fontweight='bold', rotation=90)
 
     ax.xaxis.set_ticks(np.arange(top_composers))
@@ -211,7 +217,7 @@ def plot_composer_works_num(args):
     ax.yaxis.grid(color='k', linestyle='--', linewidth=0.3)
     ax.legend(handles=[line1, line2], fontsize=15, loc=1, framealpha=1.)
     
-    plt.tight_layout(0, 0, 0)
+    plt.tight_layout(pad=0, h_pad=0, w_pad=0)
     plt.savefig(fig_path)
 
     print('Save fig to {}'.format(fig_path))
@@ -228,14 +234,14 @@ def plot_composer_durations(args):
         NoReturn
     """
 
-    def _get_composer_durations(meta_dict, indexes, composers):
+    def _get_composer_durations(meta_dict, works_indexes, composers):
         """Get the number of works of composers.
 
         Args:
           meta_dict, dict, keys: ['surname', 'firstname', 'music', 'nationality', 
               'birth', 'death', 'youtube_title', 'youtube_id', 'similarity', 
               'piano_solo_prob', 'audio_name', 'audio_duration']
-          indexes: 1darray, e.g., [0, 2, 5, 6, ...]
+          works_indexes: 1darray, e.g., [0, 2, 5, 6, ...]
           composers: list
 
         Returns:
@@ -248,10 +254,10 @@ def plot_composer_durations(args):
         # Number of works
         durations_dict = {composer: 0 for composer in composers}
         
-        for idx in indexes:
-            composer = '{}, {}'.format(meta_dict['surname'][idx], meta_dict['firstname'][idx])
+        for index in works_indexes:
+            composer = '{}, {}'.format(meta_dict['surname'][index], meta_dict['firstname'][index])
             if composer in composers:
-                durations_dict[composer] += float(meta_dict['audio_duration'][idx]) / 3600
+                durations_dict[composer] += float(meta_dict['audio_duration'][index]) / 3600
 
         durations = np.array([durations_dict[composer] for composer in composers])
 
@@ -275,8 +281,8 @@ def plot_composer_durations(args):
     for key in meta_dict.keys():
         meta_dict[key] = np.array(meta_dict[key])
 
-    all_indexes = []
-    piano_indexes = []
+    complete_works_indexes = []
+    solo_piano_works_indexes = []
 
     for n in range(len(meta_dict['youtube_title'])):
 
@@ -289,53 +295,59 @@ def plot_composer_durations(args):
                 flag = True
 
         if flag:
-            all_indexes.append(n)
+            complete_works_indexes.append(n)
 
             if meta_dict['piano_solo_prob'][n].astype(np.float32) >= 0.5:
-                piano_indexes.append(n)
+                solo_piano_works_indexes.append(n)
 
     # Get composer names.
-    piano_composers = []
+    solo_piano_composer_names = []
 
-    for idx in piano_indexes:
-        piano_composers.append('{}, {}'.format(meta_dict['surname'][idx], meta_dict['firstname'][idx]))
+    for idx in solo_piano_works_indexes:
+        solo_piano_composer_names.append('{}, {}'.format(meta_dict['surname'][idx], meta_dict['firstname'][idx]))
 
-    piano_composers = list(set(piano_composers))
+    unique_solo_piano_composer_names = list(set(solo_piano_composer_names))
 
     # Get composer works number.
-    composer_durations_full, _ = _get_composer_durations(meta_dict, all_indexes, piano_composers)
-    composer_durations_piano, sorted_indexes = _get_composer_durations(meta_dict, piano_indexes, piano_composers)
+    composer_durations_complete_works, _ = _get_composer_durations(
+        meta_dict, complete_works_indexes, unique_solo_piano_composer_names)
+
+    composer_durations_solo_piano_works, sorted_indexes = _get_composer_durations(
+        meta_dict, solo_piano_works_indexes, unique_solo_piano_composer_names)
 
     # Plot
     N = 100
-    sorted_full_durations = np.array(composer_durations_full)[sorted_indexes[0 : N]]
-    sorted_piano_durations = np.array(composer_durations_piano)[sorted_indexes[0 : N]]
-    sorted_piano_composers = np.array(piano_composers)[sorted_indexes[0 : N]]
+    sorted_full_durations = np.array(composer_durations_complete_works)[sorted_indexes[0 : N]]
+    sorted_piano_durations = np.array(composer_durations_solo_piano_works)[sorted_indexes[0 : N]]
+    sorted_piano_composers = np.array(unique_solo_piano_composer_names)[sorted_indexes[0 : N]]
 
     fig, ax = plt.subplots(1, 1, figsize=(20, 6))
     ax.set_xlim(-1, N)
     ax.set_ylim(0, 30)
-    ax.set_ylabel('Durations (h)', fontsize=15)
+    ax.set_ylabel('Duration (h)', fontsize=15)
 
     line1 = ax.bar(np.arange(N), sorted_full_durations, 
-        align='center', color='pink', alpha=0.5, label='Full works')
+        align='center', color='pink', alpha=0.5, label='Complete works')
+
     line2 = ax.bar(np.arange(N), sorted_piano_durations, 
-        align='center', color='C0', alpha=1, label='Piano works')
+        align='center', color='C0', alpha=1, label='Solo piano works')
 
     for i, v in enumerate(sorted_piano_durations):
         round_v = int(np.around(v))
-        ax.text(i - 0.3, max(v - len(str(round_v)) * 1.2, 0.5), str(round_v), color='yellow', fontweight='bold', rotation=90)
+        ax.text(i - 0.3, max(v - len(str(round_v)) * 1.2, 0.5), str(round_v), 
+            color='yellow', fontweight='bold', rotation=90)
 
     for i, v in enumerate(sorted_full_durations):
         v = int(np.around(v))
         ax.text(i - 0.3, min(30, v) + 1, str(v), color='red', fontweight='bold', rotation=90)
 
     ax.xaxis.set_ticks(np.arange(N))
-    ax.xaxis.set_ticklabels([composer[0 : 23] for composer in sorted_piano_composers], rotation=90, fontsize=13)
+    ax.xaxis.set_ticklabels([composer[0 : 23] for composer in sorted_piano_composers]
+        , rotation=90, fontsize=13)
     ax.tick_params(axis="y", labelsize=13)
     ax.yaxis.grid(color='k', linestyle='--', linewidth=0.3)
     ax.legend(handles=[line1, line2], fontsize=15, loc=1, framealpha=1.)
-    plt.tight_layout(0, 0, 0)
+    plt.tight_layout(pad=0, h_pad=0, w_pad=0)
     plt.savefig(fig_path)
     print('Save fig to {}'.format(fig_path))
 
@@ -413,13 +425,15 @@ def plot_nationalities(args):
     ax.bar(0, 0, color=c_africa, label='Afican')
     ax.legend()
     ax.xaxis.set_ticks(np.arange(N + 1))
-    ax.xaxis.set_ticklabels(['Unknown'] + unique_nationalities[1 : N].tolist() + [''], rotation=90, fontsize=10)
-    ax.yaxis.grid(color='k', linestyle='--', linewidth=0.3)  # only horizontal grid
+    ax.xaxis.set_ticklabels(['Unknown'] + unique_nationalities[1 : N].tolist() + ['']
+        , rotation=90, fontsize=10)
+    ax.yaxis.grid(color='k', linestyle='--', linewidth=0.3)
 
     for i, v in enumerate(nationalities_count):
-        ax.text(i - 0.3, min(500, v) + 10, str(v), color='k', fontweight='bold', rotation=90, fontsize=8)
+        ax.text(i - 0.3, min(500, v) + 10, str(v), color='k', fontweight='bold'
+            , rotation=90, fontsize=8)
 
-    plt.tight_layout(0, 1, 0)
+    plt.tight_layout(pad=0, h_pad=1, w_pad=0)
     plt.savefig(fig_path)
     print('Save fig to {}'.format(fig_path))
 
@@ -445,6 +459,7 @@ def calculate_music_events_from_midi(args):
     all_music_events_dict = {}
     
     for n, midi_name in enumerate(midi_names):
+
         print(n, midi_name)
         midi_path = os.path.join(midis_dir, midi_name)
 
@@ -483,13 +498,13 @@ def plot_note_histogram(args):
     # arugments & parameters
     workspace = args.workspace
     surname_in_youtube_title = args.surname_in_youtube_title
-
+    
     # paths
     csv_path = os.path.join(workspace, 'full_music_pieces_youtube_similarity_pianosoloprob_split.csv')
     all_music_events_path = os.path.join(workspace, 'all_music_events.pkl')
     fig_path = 'results/note_histogram.pdf'
     os.makedirs(os.path.dirname(fig_path), exist_ok=True)
-
+    
     # Read csv file.
     meta_dict = read_csv_to_meta_dict(csv_path)
     audios_num = len(meta_dict['audio_name'])
@@ -501,7 +516,6 @@ def plot_note_histogram(args):
     all_names = sorted([name for name in all_music_events.keys()])
     all_piano_notes = []
 
-    # for name in all_names:
     for n in range(audios_num):
     
         audio_name = meta_dict['audio_name'][n]
@@ -524,11 +538,26 @@ def plot_note_histogram(args):
             all_piano_notes += piano_notes
 
     counts = count_notes(all_piano_notes)
+    counts = np.array(counts)
 
     fig, ax = plt.subplots(1, 1, figsize=(20, 3))
-    ax.bar(np.arange(classes_num), counts, align='center')
+
+    ax.bar(np.arange(classes_num)[white_notes], counts[white_notes], 
+        align='center', color='k', fill=False, hatch='')
+
+    ax.bar(np.arange(classes_num)[black_notes], counts[black_notes], 
+        align='center', color='k')
+
     ax.xaxis.set_ticks(np.arange(classes_num))
     ax.xaxis.set_ticklabels(note_names, fontsize=10)
+
+    colors = ['k'] * 88
+    for i in C_notes:
+        colors[i] = 'r'
+
+    for xtick, color in zip(ax.get_xticklabels(), colors):
+        xtick.set_color(color)
+
     if surname_in_youtube_title:
         ax.yaxis.set_ticks([0, 2e5, 4e5, 6e5, 8e5, 1e6])
         ax.yaxis.set_ticklabels(['0', '200,000', '400,000', '600,000', '800,000', 
@@ -553,7 +582,6 @@ def get_all_names(all_music_events, csv_path, surname_in_youtube_title):
 
     all_names = []
 
-    # for name in all_names:
     for n in range(audios_num):
     
         audio_name = meta_dict['audio_name'][n]
@@ -624,13 +652,25 @@ def plot_selected_composers_note_histogram(args):
             all_piano_notes += piano_notes
 
         counts = count_notes(all_piano_notes)
+        counts = np.array(counts)
 
         axs[j].set_title(composer)
         axs[j].set_ylabel('Number of notes', fontsize=12)
         axs[j].set_xlim(-1, classes_num)
-        axs[j].bar(np.arange(classes_num), counts, align='center')
+        axs[j].bar(np.arange(classes_num)[white_notes], counts[white_notes], 
+            align='center', fill=False, hatch='')
+        axs[j].bar(np.arange(classes_num)[black_notes], counts[black_notes], 
+            align='center', color='k')
         axs[j].xaxis.set_ticks(np.arange(classes_num))
         axs[j].xaxis.set_ticklabels(note_names, fontsize=10)
+
+        colors = ['k'] * 88
+        for i in C_notes:
+            colors[i] = 'r'
+
+        for xtick, color in zip(axs[j].get_xticklabels(), colors):
+            xtick.set_color(color)
+
         axs[j].yaxis.set_ticks([0, 1e4, 2e4, 3e4])
         axs[j].yaxis.set_ticklabels(['0', '10,000', '20,000', '30,000'], fontsize=12)
 
@@ -676,7 +716,7 @@ def plot_mean_std_notes(args):
 
     stat_dict = {}
 
-    # Calculate the mean and standard of notes of all composers
+    # Calculate the average and standard values of pitches of all composers.
     for composer in sorted_composers:
         names = []
 
@@ -711,10 +751,13 @@ def plot_mean_std_notes(args):
     fig, ax = plt.subplots(1, 1, figsize=(20, 6))
     ax.plot(std_array[sorted_idxes], c='r')
     (markerline, stemlines, baseline) = ax.stem(mean_array)
-    ax.fill_between(np.arange(top_composers), mean_array - std_array / 2, mean_array + std_array / 2, alpha=0.3)
+    ax.fill_between(np.arange(top_composers), mean_array - std_array / 2, 
+        mean_array + std_array / 2, alpha=0.3)
     ax.plot(39 * np.ones(top_composers), linestyle='--', c='k')
+
     for i, v in enumerate(mean_array):
-        ax.text(i - 0.3, min(v + 9, 53), '{:.2f}'.format(v + 21), color='red', fontweight='bold', rotation=90)
+        ax.text(i - 0.3, min(v + 9, 53), '{:.2f}'.format(v + 21), color='red', 
+            fontweight='bold', rotation=90)
 
     ax.xaxis.set_ticks(np.arange(top_composers))
 
@@ -735,10 +778,6 @@ def plot_mean_std_notes(args):
     plt.tight_layout()
     plt.savefig(fig_path)
     print('Save to {}'.format(fig_path))
-
-    # from IPython import embed; embed(using=False); os._exit(0)
-    # pickle.dump([std_array, sorted_idxes, mean_array, top_composers, std_array, sorted_composers], open('tmp.pkl', 'wb'))
-
 
 def mean_of_histogram(x):
     return np.sum(x * np.arange(len(x))) / np.sum(x)
@@ -777,7 +816,7 @@ def plot_notes_per_second_mean_std(args):
 
     stat_dict = {}
 
-    # Calculate the mean and standard of notes of all composers
+    # Calculate the average and standard values of notes per second of all composers.
     for composer in sorted_composers:
         names = []
 
@@ -812,13 +851,14 @@ def plot_notes_per_second_mean_std(args):
     std_array = std_array[sorted_idxes]
 
     # Plot
-    top_composers = 100
     fig, ax = plt.subplots(1, 1, figsize=(20, 6))
     (markerline, stemlines, baseline) = ax.stem(mean_array)
-    ax.fill_between(np.arange(top_composers), mean_array - std_array / 2, mean_array + std_array / 2, alpha=0.3)
+    ax.fill_between(np.arange(top_composers), mean_array - std_array / 2, 
+        mean_array + std_array / 2, alpha=0.3)
     
     for i, v in enumerate(mean_array):
-        ax.text(i - 0.3, v + 3.5, '{:.2f}'.format(v), color='red', fontweight='bold', rotation=90)
+        ax.text(i - 0.3, v + 3.5, '{:.2f}'.format(v), color='red', 
+            fontweight='bold', rotation=90)
 
     ax.xaxis.set_ticks(np.arange(top_composers))
 
@@ -839,9 +879,6 @@ def plot_notes_per_second_mean_std(args):
     plt.tight_layout()
     plt.savefig(fig_path)
     print('Save to {}'.format(fig_path))
-
-    # from IPython import embed; embed(using=False); os._exit(0)
-    # pickle.dump([std_array, sorted_idxes, mean_array, top_composers, std_array, sorted_composers], open('tmp.pkl', 'wb'))
 
 
 def plot_selected_composers_chroma(args):
@@ -899,11 +936,22 @@ def plot_selected_composers_chroma(args):
         axs[j // 3, j % 3].set_ylabel('Frequency')
         axs[j // 3, j % 3].set_ylim(0, 0.15)
         axs[j // 3, j % 3].yaxis.grid(color='k', linestyle='--', linewidth=0.3)
-        axs[j // 3, j % 3].bar(np.arange(chroma_num), chroma_frequency, align='center')
+        white_notes_octave = np.array([0, 2, 4, 5, 7, 9, 11])
+        black_notes_octave = np.array([1, 3, 6, 8, 10])
+        axs[j // 3, j % 3].bar(white_notes_octave, chroma_frequency[white_notes_octave],
+            align='center', color='k', fill=False, hatch='')
+        axs[j // 3, j % 3].bar(black_notes_octave, chroma_frequency[black_notes_octave],
+            align='center', color='k')
         axs[j // 3, j % 3].xaxis.set_ticks(np.arange(chroma_num))
         axs[j // 3, j % 3].xaxis.set_ticklabels(chroma_names, fontsize=12)
 
-    plt.tight_layout()
+        colors = ['r'] + ['k'] * 11
+        for xtick, color in zip(axs[j // 3, j % 3].get_xticklabels(), colors):
+            xtick.set_color(color)
+
+        print(composer, chroma_counts)
+
+    plt.tight_layout(pad=0, h_pad=1, w_pad=1)
     plt.savefig(fig_path)
     print('Save fig to {}'.format(fig_path))
 
@@ -967,10 +1015,20 @@ def plot_selected_composers_intervals(args):
         axs[j // 3, j % 3].set_xlim(-1, intervals_num)
         axs[j // 3, j % 3].set_ylim(0, 0.15)
         axs[j // 3, j % 3].yaxis.grid(color='k', linestyle='--', linewidth=0.3)
-        axs[j // 3, j % 3].bar(np.arange(intervals_num), interval_frequency, align='center')
+        white_notes_inverval = np.array([0, 2, 4, 6, 7, 9, 11, 13, 15, 16, 18, 20, 22])
+        black_notes_inverval = np.array([1, 3, 5, 8, 10, 12, 14, 17, 19, 21])
+        axs[j // 3, j % 3].bar(white_notes_inverval, interval_frequency[white_notes_inverval],
+            align='center', color='k', fill=False, hatch='')
+        axs[j // 3, j % 3].bar(black_notes_inverval, interval_frequency[black_notes_inverval],
+            align='center', color='k')
         axs[j // 3, j % 3].xaxis.set_ticks(np.arange(intervals_num))
-        labels = ['-11', '\n-10', '-9', '\n-8', '-7', '\n-6', '-5', '\n-4', '-3', '\n-2', '-1', '\n0', '1', '\n2', '3', '\n4', '5', '\n6', '7', '\n8', '9', '\n10', '11']
+        labels = ['-11', '\n-10', '-9', '\n-8', '-7', '\n-6', '-5', '\n-4', 
+            '-3', '\n-2', '-1', '\n' + r'$\bf{0}$', '1', '\n2', '3', '\n4', '5', '\n6', '7', 
+            '\n8', '9', '\n10', '11']
         axs[j // 3, j % 3].xaxis.set_ticklabels(labels, fontsize=11, rotation='0')
+        colors = ['k'] * 11 + ['r'] + ['k'] * 11
+        for xtick, color in zip(axs[j // 3, j % 3].get_xticklabels(), colors):
+            xtick.set_color(color)
 
         if j in [0, 3]:
             axs[j // 3, j % 3].set_ylabel('Frequency', fontsize=12)
@@ -1010,10 +1068,10 @@ def plot_selected_composers_chords(args):
             piano_note = note_events[n]['midi_note'] - 21
 
             if event_time - anchor_time > delta_time:
-                """Collect chord"""
+                # Collect chord.
                 tmp = np.array(chord)
-                tmp -= np.min(tmp)  # Transpose the chord so that its bass note is C
-                tmp %= 12   # Move all notes to a same octave
+                tmp -= np.min(tmp)  # Transpose the chord so that its bass note is C.
+                tmp %= 12   # Move all notes to a same octave.
                 tmp = str(set(sorted(tmp)))
                 if tmp in chord_dict.keys():
                     chord_dict[tmp] += 1
@@ -1029,7 +1087,7 @@ def plot_selected_composers_chords(args):
         return chord_dict
 
     def sort_dict(chord_dict):
-        """Get chord list by their descending chord numer
+        """Get chord list by their descending chord number.
 
         Args:
           chord_dict: dict, e.g., 
@@ -1184,7 +1242,7 @@ def plot_selected_composers_chords(args):
         if j in [1, 2, 4, 5]:
             axs[j // 3, j % 3].tick_params(labelleft='off')
 
-    plt.tight_layout(0, 1, 1)
+    plt.tight_layout(pad=0, h_pad=1, w_pad=1)
     plt.savefig(fig_path)
     print('Save fig to {}'.format(fig_path))
 
