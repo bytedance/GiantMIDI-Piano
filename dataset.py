@@ -562,9 +562,15 @@ def download_youtube_piano_solo(args):
         print('{}; {} {}; {}; {}'.format(n, meta_dict['firstname'][n], 
             meta_dict['surname'][n], meta_dict['music'][n], meta_dict['youtube_title'][n]))
 
-        if float(meta_dict['piano_solo_prob'][n]) >= 0.5:
-            count += 1
-            
+        try:
+            prob = float(meta_dict['piano_solo_prob'][n])
+        except ValueError as ve:
+            print(f"{n}/{len(meta_dict['piano_solo_prob'])}", "SKIPPING ENTRY:", ve)
+            n += 1
+            continue
+
+        if prob >= 0.5:
+
             bare_name = os.path.join('{}, {}, {}, {}'.format(
                 meta_dict['surname'][n], meta_dict['firstname'][n], 
                 meta_dict['music'][n], meta_dict['youtube_id'][n]).replace('/', '_'))
@@ -594,7 +600,7 @@ def download_youtube_piano_solo(args):
 
                 if os.path.splitext(audio_path)[-1] != '.mp3':
                     os.system('rm "{}"'.format(audio_path))
-
+            count += 1
         n += 1
             
     print('{} out of {} audios are downloaded!'.format(count, end_index - begin_index))

@@ -42,11 +42,12 @@ def calculate_piano_solo_prob(args):
     meta_dict['piano_solo_prob'] = []
     meta_dict['audio_name'] = []
     meta_dict['audio_duration'] = []
-    count = 0
 
     piano_solo_detector = piano_detection_model.PianoSoloDetector()
 
     for n in range(len(meta_dict['surname'])):
+        print("\n\n", f"{n}/{end_index}")
+
         mp3_path = os.path.join(mp3s_dir, '{}, {}, {}, {}.mp3'.format(
             meta_dict['surname'][n], meta_dict['firstname'][n], 
             meta_dict['music'][n], meta_dict['youtube_id'][n]).replace('/', '_'))
@@ -102,27 +103,23 @@ def transcribe_piano(args):
     # Transcriptor
     transcriptor = piano_transcription_inference.PianoTranscription(device=device)
 
-    count = 0
     transcribe_time = time.time()
     audios_num = len(meta_dict['surname'])
 
     for n in range(begin_index, min(end_index, audios_num)):
-        
+
         if meta_dict['giant_midi_piano'][n] and int(meta_dict['giant_midi_piano'][n]) == 1:
-            count += 1
-            
             mp3_path = os.path.join(mp3s_dir, '{}.mp3'.format(meta_dict['audio_name'][n]))
-            print(n, mp3_path)
             midi_path = os.path.join(midis_dir, '{}.mid'.format(meta_dict['audio_name'][n]))
-
-            (audio, _) = piano_transcription_inference.load_audio(mp3_path, 
-                sr=piano_transcription_inference.sample_rate, mono=True)
-
+            print(n, mp3_path)
             try:
+                (audio, _) = piano_transcription_inference.load_audio(
+                    mp3_path, sr=piano_transcription_inference.sample_rate, mono=True)
                 # Transcribe
                 transcribed_dict = transcriptor.transcribe(audio, midi_path)
-            except:
-                print('Failed for this audio!') 
+            except Exception as e:
+                print('Failed for this audio!', mp3_path)
+                print(e)
 
     print('Time: {:.3f} s'.format(time.time() - transcribe_time))
 
